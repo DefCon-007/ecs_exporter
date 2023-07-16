@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 
 	dockertypes "github.com/docker/docker/api/types"
 )
@@ -67,6 +68,7 @@ func (c *Client) RetrieveTaskStats(ctx context.Context) (map[string]*ContainerSt
 func (c *Client) RetrieveTaskMetadata(ctx context.Context) (*TaskMetadata, error) {
 	var out TaskMetadata
 	err := c.request(ctx, c.endpoint+"/task", &out)
+	out.SetTaskID()
 	return &out, err
 }
 
@@ -118,6 +120,12 @@ type ContainerStats struct {
 	} `json:"network_rate_stats"`
 }
 
+func (t *TaskMetadata) SetTaskID() {
+    parts := strings.Split(t.TaskARN, "/")
+    t.TaskID = parts[len(parts)-1]
+}
+
+
 type TaskMetadataLimits struct {
 	CPU    float64 `json:"CPU"`
 	Memory float64 `json:"Memory"`
@@ -126,6 +134,7 @@ type TaskMetadataLimits struct {
 type TaskMetadata struct {
 	Cluster          string             `json:"Cluster"`
 	TaskARN          string             `json:"TaskARN"`
+	TaskID		   	 string
 	Family           string             `json:"Family"`
 	Revision         string             `json:"Revision"`
 	DesiredStatus    string             `json:"DesiredStatus"`
