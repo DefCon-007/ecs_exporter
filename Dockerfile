@@ -4,8 +4,8 @@ ARG OS="linux"
 FROM golang:1.20-alpine as build
 
 WORKDIR /app
+RUN apk add --no-cache make curl git
 COPY . /app/
-RUN apk add --no-cache make curl
 RUN make promu
 RUN make build
 

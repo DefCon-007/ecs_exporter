@@ -1,0 +1,110 @@
+{
+  "uuid": "bc06f559-d940-4b25-8f20-66c469e480b7",
+  "lastMigration": 27,
+  "name": "Ecs sample",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "cffcd3bd-535b-4d98-9cff-78d76b682106",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "task",
+      "responses": [
+        {
+          "uuid": "48bcece4-2808-4d55-9be6-be597023ad58",
+          "body": "{\n    \"Cluster\": \"default\",\n    \"TaskARN\": \"arn:aws:ecs:us-west-2:111122223333:task/default/158d1c8083dd49d6b527399fd6414f5c\",\n    \"Family\": \"curltest\",\n    \"ServiceName\": \"MyService\",\n    \"Revision\": \"26\",\n    \"DesiredStatus\": \"RUNNING\",\n    \"KnownStatus\": \"RUNNING\",\n    \"PullStartedAt\": \"2020-10-02T00:43:06.202617438Z\",\n    \"PullStoppedAt\": \"2020-10-02T00:43:06.31288465Z\",\n    \"AvailabilityZone\": \"us-west-2d\",\n    \"VPCID\": \"vpc-1234567890abcdef0\",\n    \"LaunchType\": \"EC2\",\n    \"Containers\": [\n        {\n            \"DockerId\": \"598cba581fe3f939459eaba1e071d5c93bb2c49b7d1ba7db6bb19deeb70d8e38\",\n            \"Name\": \"~internal~ecs~pause\",\n            \"DockerName\": \"ecs-curltest-26-internalecspause-e292d586b6f9dade4a00\",\n            \"Image\": \"amazon/amazon-ecs-pause:0.1.0\",\n            \"ImageID\": \"\",\n            \"Labels\": {\n                \"com.amazonaws.ecs.cluster\": \"default\",\n                \"com.amazonaws.ecs.container-name\": \"~internal~ecs~pause\",\n                \"com.amazonaws.ecs.task-arn\": \"arn:aws:ecs:us-west-2:111122223333:task/default/158d1c8083dd49d6b527399fd6414f5c\",\n                \"com.amazonaws.ecs.task-definition-family\": \"curltest\",\n                \"com.amazonaws.ecs.task-definition-version\": \"26\"\n            },\n            \"DesiredStatus\": \"RESOURCES_PROVISIONED\",\n            \"KnownStatus\": \"RESOURCES_PROVISIONED\",\n            \"Limits\": {\n                \"CPU\": 0,\n                \"Memory\": 0\n            },\n            \"CreatedAt\": \"2020-10-02T00:43:05.602352471Z\",\n            \"StartedAt\": \"2020-10-02T00:43:06.076707576Z\",\n            \"Type\": \"CNI_PAUSE\",\n            \"Networks\": [\n                {\n                    \"NetworkMode\": \"awsvpc\",\n                    \"IPv4Addresses\": [\n                        \"10.0.2.61\"\n                    ],\n                    \"AttachmentIndex\": 0,\n                    \"MACAddress\": \"0e:10:e2:01:bd:91\",\n                    \"IPv4SubnetCIDRBlock\": \"10.0.2.0/24\",\n                    \"PrivateDNSName\": \"ip-10-0-2-61.us-west-2.compute.internal\",\n                    \"SubnetGatewayIpv4Address\": \"10.0.2.1/24\"\n                }\n            ]\n        },\n        {\n            \"DockerId\": \"ee08638adaaf009d78c248913f629e38299471d45fe7dc944d1039077e3424ca\",\n            \"Name\": \"curl\",\n            \"DockerName\": \"ecs-curltest-26-curl-a0e7dba5aca6d8cb2e00\",\n            \"Image\": \"111122223333.dkr.ecr.us-west-2.amazonaws.com/curltest:latest\",\n            \"ImageID\": \"sha256:d691691e9652791a60114e67b365688d20d19940dde7c4736ea30e660d8d3553\",\n            \"Labels\": {\n                \"com.amazonaws.ecs.cluster\": \"default\",\n                \"com.amazonaws.ecs.container-name\": \"curl\",\n                \"com.amazonaws.ecs.task-arn\": \"arn:aws:ecs:us-west-2:111122223333:task/default/158d1c8083dd49d6b527399fd6414f5c\",\n                \"com.amazonaws.ecs.task-definition-family\": \"curltest\",\n                \"com.amazonaws.ecs.task-definition-version\": \"26\"\n            },\n            \"DesiredStatus\": \"RUNNING\",\n            \"KnownStatus\": \"RUNNING\",\n            \"Limits\": {\n                \"CPU\": 10,\n                \"Memory\": 128\n            },\n            \"CreatedAt\": \"2020-10-02T00:43:06.326590752Z\",\n            \"StartedAt\": \"2020-10-02T00:43:06.767535449Z\",\n            \"Type\": \"NORMAL\",\n            \"LogDriver\": \"awslogs\",\n            \"LogOptions\": {\n                \"awslogs-create-group\": \"true\",\n                \"awslogs-group\": \"/ecs/metadata\",\n                \"awslogs-region\": \"us-west-2\",\n                \"awslogs-stream\": \"ecs/curl/158d1c8083dd49d6b527399fd6414f5c\"\n            },\n            \"ContainerARN\": \"arn:aws:ecs:us-west-2:111122223333:container/abb51bdd-11b4-467f-8f6c-adcfe1fe059d\",\n            \"Networks\": [\n                {\n                    \"NetworkMode\": \"awsvpc\",\n                    \"IPv4Addresses\": [\n                        \"10.0.2.61\"\n                    ],\n                    \"AttachmentIndex\": 0,\n                    \"MACAddress\": \"0e:10:e2:01:bd:91\",\n                    \"IPv4SubnetCIDRBlock\": \"10.0.2.0/24\",\n                    \"PrivateDNSName\": \"ip-10-0-2-61.us-west-2.compute.internal\",\n                    \"SubnetGatewayIpv4Address\": \"10.0.2.1/24\"\n                }\n            ]\n        }\n    ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "df83fbef-c112-481f-9872-0ef0f5f2e04e",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "task/stats",
+      "responses": [
+        {
+          "uuid": "fa8534a9-d47c-48b1-891d-a49e1936994d",
+          "body": "{\n  \"598cba581fe3f939459eaba1e071d5c93bb2c49b7d1ba7db6bb19deeb70d8e38\": {\n    \"read\": \"2020-10-08T21:24:44.938937019Z\",\n    \"preread\": \"2020-10-08T21:24:34.938633969Z\",\n    \"pids_stats\": {},\n    \"blkio_stats\": {\n      \"io_service_bytes_recursive\": [\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Read\",\n          \"value\": 638976\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Write\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Sync\",\n          \"value\": 638976\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Async\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Total\",\n          \"value\": 638976\n        }\n      ],\n      \"io_serviced_recursive\": [\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Read\",\n          \"value\": 12\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Write\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Sync\",\n          \"value\": 12\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Async\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Total\",\n          \"value\": 12\n        }\n      ],\n      \"io_queue_recursive\": [],\n      \"io_service_time_recursive\": [],\n      \"io_wait_time_recursive\": [],\n      \"io_merged_recursive\": [],\n      \"io_time_recursive\": [],\n      \"sectors_recursive\": []\n    },\n    \"num_procs\": 0,\n    \"storage_stats\": {},\n    \"cpu_stats\": {\n      \"cpu_usage\": {\n        \"total_usage\": 1137691504,\n        \"percpu_usage\": [\n          696479228,\n          441212276,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0\n        ],\n        \"usage_in_kernelmode\": 80000000,\n        \"usage_in_usermode\": 810000000\n      },\n      \"system_cpu_usage\": 9393210000000,\n      \"online_cpus\": 2,\n      \"throttling_data\": {\n        \"periods\": 0,\n        \"throttled_periods\": 0,\n        \"throttled_time\": 0\n      }\n    },\n    \"precpu_stats\": {\n      \"cpu_usage\": {\n        \"total_usage\": 1136624601,\n        \"percpu_usage\": [\n          695639662,\n          440984939,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0\n        ],\n        \"usage_in_kernelmode\": 80000000,\n        \"usage_in_usermode\": 810000000\n      },\n      \"system_cpu_usage\": 9373330000000,\n      \"online_cpus\": 2,\n      \"throttling_data\": {\n        \"periods\": 0,\n        \"throttled_periods\": 0,\n        \"throttled_time\": 0\n      }\n    },\n    \"memory_stats\": {\n      \"usage\": 6504448,\n      \"max_usage\": 8458240,\n      \"stats\": {\n        \"active_anon\": 1675264,\n        \"active_file\": 557056,\n        \"cache\": 651264,\n        \"dirty\": 0,\n        \"hierarchical_memory_limit\": 536870912,\n        \"hierarchical_memsw_limit\": 9223372036854772000,\n        \"inactive_anon\": 0,\n        \"inactive_file\": 3088384,\n        \"mapped_file\": 430080,\n        \"pgfault\": 11034,\n        \"pgmajfault\": 5,\n        \"pgpgin\": 8436,\n        \"pgpgout\": 7137,\n        \"rss\": 4669440,\n        \"rss_huge\": 0,\n        \"total_active_anon\": 1675264,\n        \"total_active_file\": 557056,\n        \"total_cache\": 651264,\n        \"total_dirty\": 0,\n        \"total_inactive_anon\": 0,\n        \"total_inactive_file\": 3088384,\n        \"total_mapped_file\": 430080,\n        \"total_pgfault\": 11034,\n        \"total_pgmajfault\": 5,\n        \"total_pgpgin\": 8436,\n        \"total_pgpgout\": 7137,\n        \"total_rss\": 4669440,\n        \"total_rss_huge\": 0,\n        \"total_unevictable\": 0,\n        \"total_writeback\": 0,\n        \"unevictable\": 0,\n        \"writeback\": 0\n      },\n      \"limit\": 9223372036854772000\n    },\n    \"name\": \"curltest\",\n    \"id\": \"3d1f891cded94dc795608466cce8ddcf-464223573\",\n    \"networks\": {\n      \"eth1\": {\n        \"rx_bytes\": 2398415937,\n        \"rx_packets\": 1898631,\n        \"rx_errors\": 0,\n        \"rx_dropped\": 0,\n        \"tx_bytes\": 1259037719,\n        \"tx_packets\": 428002,\n        \"tx_errors\": 0,\n        \"tx_dropped\": 0\n      }\n    },\n    \"network_rate_stats\": {\n      \"rx_bytes_per_sec\": 43.298687872232854,\n      \"tx_bytes_per_sec\": 215.39347269466413\n    }\n  },\n  \"ee08638adaaf009d78c248913f629e38299471d45fe7dc944d1039077e3424ca\": {\n    \"read\": \"2020-10-08T21:24:44.938937019Z\",\n    \"preread\": \"2020-10-08T21:24:34.938633969Z\",\n    \"pids_stats\": {},\n    \"blkio_stats\": {\n      \"io_service_bytes_recursive\": [\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Read\",\n          \"value\": 638976\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Write\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Sync\",\n          \"value\": 638976\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Async\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Total\",\n          \"value\": 638976\n        }\n      ],\n      \"io_serviced_recursive\": [\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Read\",\n          \"value\": 12\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Write\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Sync\",\n          \"value\": 12\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Async\",\n          \"value\": 0\n        },\n        {\n          \"major\": 202,\n          \"minor\": 26368,\n          \"op\": \"Total\",\n          \"value\": 12\n        }\n      ],\n      \"io_queue_recursive\": [],\n      \"io_service_time_recursive\": [],\n      \"io_wait_time_recursive\": [],\n      \"io_merged_recursive\": [],\n      \"io_time_recursive\": [],\n      \"sectors_recursive\": []\n    },\n    \"num_procs\": 0,\n    \"storage_stats\": {},\n    \"cpu_stats\": {\n      \"cpu_usage\": {\n        \"total_usage\": 1137691504,\n        \"percpu_usage\": [\n          696479228,\n          441212276,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0\n        ],\n        \"usage_in_kernelmode\": 80000000,\n        \"usage_in_usermode\": 810000000\n      },\n      \"system_cpu_usage\": 9393210000000,\n      \"online_cpus\": 2,\n      \"throttling_data\": {\n        \"periods\": 0,\n        \"throttled_periods\": 0,\n        \"throttled_time\": 0\n      }\n    },\n    \"precpu_stats\": {\n      \"cpu_usage\": {\n        \"total_usage\": 1136624601,\n        \"percpu_usage\": [\n          695639662,\n          440984939,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0,\n          0\n        ],\n        \"usage_in_kernelmode\": 80000000,\n        \"usage_in_usermode\": 810000000\n      },\n      \"system_cpu_usage\": 9373330000000,\n      \"online_cpus\": 2,\n      \"throttling_data\": {\n        \"periods\": 0,\n        \"throttled_periods\": 0,\n        \"throttled_time\": 0\n      }\n    },\n    \"memory_stats\": {\n      \"usage\": 6504448,\n      \"max_usage\": 8458240,\n      \"stats\": {\n        \"active_anon\": 1675264,\n        \"active_file\": 557056,\n        \"cache\": 651264,\n        \"dirty\": 0,\n        \"hierarchical_memory_limit\": 536870912,\n        \"hierarchical_memsw_limit\": 9223372036854772000,\n        \"inactive_anon\": 0,\n        \"inactive_file\": 3088384,\n        \"mapped_file\": 430080,\n        \"pgfault\": 11034,\n        \"pgmajfault\": 5,\n        \"pgpgin\": 8436,\n        \"pgpgout\": 7137,\n        \"rss\": 4669440,\n        \"rss_huge\": 0,\n        \"total_active_anon\": 1675264,\n        \"total_active_file\": 557056,\n        \"total_cache\": 651264,\n        \"total_dirty\": 0,\n        \"total_inactive_anon\": 0,\n        \"total_inactive_file\": 3088384,\n        \"total_mapped_file\": 430080,\n        \"total_pgfault\": 11034,\n        \"total_pgmajfault\": 5,\n        \"total_pgpgin\": 8436,\n        \"total_pgpgout\": 7137,\n        \"total_rss\": 4669440,\n        \"total_rss_huge\": 0,\n        \"total_unevictable\": 0,\n        \"total_writeback\": 0,\n        \"unevictable\": 0,\n        \"writeback\": 0\n      },\n      \"limit\": 9223372036854772000\n    },\n    \"name\": \"curltest\",\n    \"id\": \"3d1f891cded94dc795608466cce8ddcf-464223573\",\n    \"networks\": {\n      \"eth1\": {\n        \"rx_bytes\": 2398415937,\n        \"rx_packets\": 1898631,\n        \"rx_errors\": 0,\n        \"rx_dropped\": 0,\n        \"tx_bytes\": 1259037719,\n        \"tx_packets\": 428002,\n        \"tx_errors\": 0,\n        \"tx_dropped\": 0\n      }\n    },\n    \"network_rate_stats\": {\n      \"rx_bytes_per_sec\": 43.298687872232854,\n      \"tx_bytes_per_sec\": 215.39347269466413\n    }\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "cffcd3bd-535b-4d98-9cff-78d76b682106"
+    },
+    {
+      "type": "route",
+      "uuid": "df83fbef-c112-481f-9872-0ef0f5f2e04e"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
+}
