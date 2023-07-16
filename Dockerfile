@@ -1,12 +1,14 @@
 ARG ARCH="amd64"
 ARG OS="linux"
-FROM quay.io/prometheus/busybox-${OS}-${ARCH}:latest
-LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
-ARG ARCH="amd64"
-ARG OS="linux"
-COPY .build/${OS}-${ARCH}/ecs_exporter /bin/ecs_exporter
+FROM grafana/agent:v0.34.3
 
-EXPOSE     9779
-USER       nobody
-ENTRYPOINT [ "/bin/ecs_exporter" ]
+RUN apt update && apt install -y ca-certificates
+
+COPY ./grafana-agent-config.yml /etc/grafana-agent-config.yml
+COPY ./ecs_exporter /bin/ecs_exporter
+COPY ./entrypoint.sh /bin/entrypoint.sh
+
+EXPOSE 9779
+
+ENTRYPOINT ["sh", "/bin/entrypoint.sh" ]

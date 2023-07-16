@@ -47,6 +47,15 @@ from App Runner services.
 - **device**: Network interface device associated with the metric. Only
   available for several network metrics.
 
+## Grafana Agent configuration
+
+The image is built upon the Grafana agent image and can allows following congifuration options via environment variables:
+
+1. **`REMOTE_WRITE_URL`**: The Prometheus endpoint URL to send metrics to. e.g. `https://prometheus-us-central1.grafana.net/api/prom/push`
+2. **`REMOTE_WRITE_USERNAME`**: Basic auth username for the remote write endpoint.
+3. **`REMOTE_WRITE_PASSWORD`**: Basic auth password for the remote write endpoint.
+4. **`TARGET_HOST`**: The host endpoint to scrape metrics from, defaults to `localhost:9779`
+
 ## Example output
 
 ```
