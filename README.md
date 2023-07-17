@@ -47,7 +47,11 @@ from App Runner services.
 - **device**: Network interface device associated with the metric. Only
   available for several network metrics.
 
-## Grafana Agent configuration
+## Environment Variables
+
+- **`ECS_EXPORTER_CLI_ARGS`**: Additional CLI arguments to pass to the exporter. e.g. `--ignore-exporter-metrics`
+
+### Grafana Agent configuration
 
 The image is built upon the Grafana agent image and can allows following congifuration options via environment variables:
 
