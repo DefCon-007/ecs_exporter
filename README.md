@@ -58,8 +58,9 @@ The image is built upon the Grafana agent image and can allows following congifu
 1. **`REMOTE_WRITE_URL`**: The Prometheus endpoint URL to send metrics to. e.g. `https://prometheus-us-central1.grafana.net/api/prom/push`
 2. **`REMOTE_WRITE_USERNAME`**: Basic auth username for the remote write endpoint.
 3. **`REMOTE_WRITE_PASSWORD`**: Basic auth password for the remote write endpoint.
-4. **`TARGET_HOST`**: The host endpoint to scrape metrics from, defaults to `localhost:9779`
-5. **`ENVIRONMENT`**: The environment name to be used for the `environment` label, defaults to `dev`.
+4. **`SCRAPE_INTERVAL`**: The scrape interval for the agent, defaults to `15s`.
+5. **`TARGET_HOST`**: The host endpoint to scrape metrics from, defaults to `localhost:9779`
+6. **`ENVIRONMENT`**: The environment name to be used for the `environment` label, defaults to `dev`.
 
 ## Example output
 

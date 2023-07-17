@@ -1,6 +1,6 @@
 metrics:
   global:
-    scrape_interval: 5s
+    scrape_interval: ${SCRAPE_INTERVAL:-15s}
   configs:
     - name: hosted-prometheus
       scrape_configs:
