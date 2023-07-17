@@ -1,0 +1,4 @@
+ECS_CONTAINER_METADATA_URI_V4=http://localhost:3001
+REMOTE_WRITE_URL=https://test-remote-write.com
+REMOTE_WRITE_USERNAME=test-user
+REMOTE_WRITE_PASSWORD=test-password

@@ -107,10 +107,12 @@ var (
 
 var labels = []string{
 	"container",
+	"task_id",
 }
 
 var svcLabels = []string{
 	"task_arn",
+	"task_id",
 }
 
 var metadataLabels = []string{
@@ -124,6 +126,7 @@ var metadataLabels = []string{
 	"pull_stopped_at",
 	"availability_zone",
 	"launch_type",
+	"task_id",
 }
 
 var cpuLabels = append(
@@ -183,10 +186,12 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		metadata.PullStoppedAt,
 		metadata.AvailabilityZone,
 		metadata.LaunchType,
+		metadata.TaskID,
 	)
 
 	svcLableVals := []string{
 		metadata.TaskARN,
+		metadata.TaskID,
 	}
 
 	ch <- prometheus.MustNewConstMetric(
@@ -217,6 +222,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 
 		labelVals := []string{
 			container.Name,
+			metadata.TaskID,
 		}
 
 		for i, cpuUsage := range s.CPUStats.CPUUsage.PercpuUsage {

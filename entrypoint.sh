@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Start ECS exporter in background
+/bin/ecs_exporter &
+
+# Start grafana agent
+/bin/grafana-agent --config.file=/etc/grafana-agent-config.yml --config.expand-env
