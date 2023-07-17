@@ -7,6 +7,11 @@ metrics:
         - job_name: node
           static_configs:
             - targets: ['${TARGET_HOST:-localhost:9779}']
+          metric_relabel_configs:
+            - source_labels: []
+              target_label: environment
+              replacement: ${ENVIRONMENT:-dev}
+
       remote_write:
         - url: ${REMOTE_WRITE_URL}
           basic_auth:

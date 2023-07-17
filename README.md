@@ -55,6 +55,7 @@ The image is built upon the Grafana agent image and can allows following congifu
 2. **`REMOTE_WRITE_USERNAME`**: Basic auth username for the remote write endpoint.
 3. **`REMOTE_WRITE_PASSWORD`**: Basic auth password for the remote write endpoint.
 4. **`TARGET_HOST`**: The host endpoint to scrape metrics from, defaults to `localhost:9779`
+5. **`ENVIRONMENT`**: The environment name to be used for the `environment` label, defaults to `dev`.
 
 ## Example output
 
