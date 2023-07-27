@@ -49,6 +49,11 @@ var (
 		"Total CPU usage in seconds.",
 		cpuLabels, nil)
 
+	cpuUsagePercentageDesc = prometheus.NewDesc(
+		"ecs_cpu_percent_total",
+		"Total CPU usage in percentage. (Max 100%)",
+		labels, nil)
+
 	memUsageDesc = prometheus.NewDesc(
 		"ecs_memory_bytes",
 		"Memory usage in bytes.",
@@ -151,6 +156,7 @@ type collector struct {
 
 func (c *collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- cpuTotalDesc
+	ch <- cpuUsagePercentageDesc
 	ch <- memUsageDesc
 	ch <- memLimitDesc
 	ch <- memCacheUsageDesc
@@ -224,6 +230,19 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 			container.Name,
 			metadata.TaskID,
 		}
+
+		// Calculate CPU usage percentage
+		cpu_delta := s.CPUStats.CPUUsage.TotalUsage - s.PreCPUStats.CPUUsage.TotalUsage
+		system_delta := s.CPUStats.SystemUsage - s.PreCPUStats.SystemUsage
+
+		cpu_usage_percentage := float64(cpu_delta) / float64(system_delta) * 100.0
+
+		ch <- prometheus.MustNewConstMetric(
+			cpuUsagePercentageDesc,
+			prometheus.GaugeValue,
+			cpu_usage_percentage,
+			labelVals...,
+		)
 
 		for i, cpuUsage := range s.CPUStats.CPUUsage.PercpuUsage {
 			cpu := fmt.Sprintf("%d", i)
