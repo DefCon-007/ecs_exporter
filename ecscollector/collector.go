@@ -19,6 +19,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/prometheus-community/ecs_exporter/ecsmetadata"
 	"github.com/prometheus/client_golang/prometheus"
@@ -26,7 +27,12 @@ import (
 
 // ECS cpu_stats are from upstream docker/moby. These values are in nanoseconds.
 // https://github.com/moby/moby/blob/49f021ebf00a76d74f5ce158244083e2dfba26fb/api/types/stats.go#L18-L40
-const nanoSeconds = 1.0e9
+const (
+	nanoSeconds = 1.0e9
+	timeLayout = "2006-01-02T15:04:05.999999999Z"
+	cpuIn1Vcpu = 1024
+	bytesInMiB = 1024 * 1024
+)
 
 var (
 	metadataDesc = prometheus.NewDesc(
@@ -36,7 +42,7 @@ var (
 
 	svcCpuLimitDesc = prometheus.NewDesc(
 		"ecs_svc_cpu_limit",
-		"Total CPU Limit.",
+		"Total CPU Limit. (1 unit = 1/1024th of a vCPU)",
 		svcLabels, nil)
 
 	svcMemLimitDesc = prometheus.NewDesc(
@@ -49,9 +55,14 @@ var (
 		"Total CPU usage in seconds.",
 		cpuLabels, nil)
 
-	cpuUsagePercentageDesc = prometheus.NewDesc(
-		"ecs_cpu_percent_total",
-		"Total CPU usage in percentage. (Max 100%)",
+	cpuUtilizedDesc = prometheus.NewDesc(
+		"ecs_cpu_utilized",
+		"Total CPU usage. (1 unit = 1/1024th of a vCPU)",
+		labels, nil)
+
+	memoryUtilizedDesc = prometheus.NewDesc(
+		"ecs_memory_utilized_mega_bytes",
+		"Total memory utilized in MB.",
 		labels, nil)
 
 	memUsageDesc = prometheus.NewDesc(
@@ -156,7 +167,8 @@ type collector struct {
 
 func (c *collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- cpuTotalDesc
-	ch <- cpuUsagePercentageDesc
+	ch <- cpuUtilizedDesc
+	ch <- memoryUtilizedDesc
 	ch <- memUsageDesc
 	ch <- memLimitDesc
 	ch <- memCacheUsageDesc
@@ -203,7 +215,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 	ch <- prometheus.MustNewConstMetric(
 		svcCpuLimitDesc,
 		prometheus.GaugeValue,
-		float64(metadata.Limits.CPU),
+		float64(metadata.Limits.CPU) * 1024,
 		svcLableVals...,
 	)
 
@@ -219,6 +231,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		log.Printf("Failed to retrieve container stats: %v", err)
 		return
 	}
+
 	for _, container := range metadata.Containers {
 		s := stats[container.DockerID]
 		if s == nil {
@@ -233,23 +246,27 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 
 		// Calculate CPU usage percentage
 		cpu_delta := s.CPUStats.CPUUsage.TotalUsage - s.PreCPUStats.CPUUsage.TotalUsage
-		system_delta := s.CPUStats.SystemUsage - s.PreCPUStats.SystemUsage
+		// system_delta := s.CPUStats.SystemUsage - s.PreCPUStats.SystemUsage
 
-		cpu_usage_percentage := float64(cpu_delta) / float64(system_delta) * 100.0
+		parsedReadTime, _ := time.Parse(timeLayout, s.Read)
+		parsedPreReadTime, _ := time.Parse(timeLayout, s.PreRead)
+		time_diff_since_last_read := parsedReadTime.Sub(parsedPreReadTime).Nanoseconds()
 
+		cpu_usage_in_vcpu := (float64(cpu_delta) / float64(time_diff_since_last_read) ) * cpuIn1Vcpu
 		ch <- prometheus.MustNewConstMetric(
-			cpuUsagePercentageDesc,
+			cpuUtilizedDesc,
 			prometheus.GaugeValue,
-			cpu_usage_percentage,
+			cpu_usage_in_vcpu,
 			labelVals...,
 		)
 
 		for i, cpuUsage := range s.CPUStats.CPUUsage.PercpuUsage {
 			cpu := fmt.Sprintf("%d", i)
+			cpuUsageSeconds := float64(cpuUsage) / nanoSeconds
 			ch <- prometheus.MustNewConstMetric(
 				cpuTotalDesc,
 				prometheus.CounterValue,
-				float64(cpuUsage)/nanoSeconds,
+				cpuUsageSeconds,
 				append(labelVals, cpu)...,
 			)
 		}
@@ -257,6 +274,14 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		cacheValue := 0.0
 		if val, ok := s.MemoryStats.Stats["cache"]; ok {
 			cacheValue = float64(val)
+
+			memoryUtilizedInMegaBytes := (float64(s.MemoryStats.Usage) - cacheValue) / bytesInMiB
+			ch <- prometheus.MustNewConstMetric(
+				memoryUtilizedDesc,
+				prometheus.GaugeValue,
+				memoryUtilizedInMegaBytes,
+				labelVals...,
+			)
 		}
 
 		for desc, value := range map[*prometheus.Desc]float64{
