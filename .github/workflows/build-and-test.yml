@@ -4,9 +4,6 @@ on:
   push:
     branches: ['*']
 
-env:
-  DOCKERHUB_REPOSITORY: 'defcon007/ecs-prometheus-exporter'
-
 jobs:
   Build:
     runs-on: ubuntu-latest
@@ -29,8 +26,8 @@ jobs:
           cache-from: type=gha,scope=prod
           cache-to: type=gha,scope=prod,mode=max
           tags: |
-            ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.GITHUB_REF_NAME_SLUG }}
-            ${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ env.GITHUB_REF_NAME_SLUG }}
+            ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ github.sha }}
 
   E2E-Test:
     runs-on: ubuntu-latest
@@ -50,7 +47,7 @@ jobs:
           docker run --network host -v ${{ github.workspace }}/mockoon-ecs-metadata-sample-response.json:/data/mockoon.json -d mockoon/cli  --data /data/mockoon.json --port 3001
 
       - name: Run Docker image
-        run: docker run --name ecs-exporter --network host --env-file ${{ github.workspace }}/test/e2e-env-file -d ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.GITHUB_REF_NAME_SLUG }}
+        run: docker run --name ecs-exporter --network host --env-file ${{ github.workspace }}/test/e2e-env-file -d ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ env.GITHUB_REF_NAME_SLUG }}
 
       - name: Wait for Docker image to start
         run: sleep 5
