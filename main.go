@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/prometheus-community/ecs_exporter/ecscollector"
 	"github.com/prometheus-community/ecs_exporter/ecsmetadata"
@@ -25,8 +26,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-var addr string
-var shouldIgnoreExporterMetrics bool
+const (
+	CUSTOM_LABEL_SEPARATOR = ","
+	CUSTOM_LABEL_KEY_VALUE_SEPARATOR = "="
+)
+
+var (
+	addr string
+	shouldIgnoreExporterMetrics bool
+	customLabels  = make(map[string]string)
+)
+
 
 func main() {
 	flag.StringVar(&addr, "addr", ":9779", "The address to listen on for HTTP requests.")
@@ -34,6 +44,19 @@ func main() {
 		"ignore-exporter-metrics",
 		false,
 		"Flag to stop the exporter should expose its own metrics. To enable it, just add `--ignore-exporter-metrics` to the command line.`")
+
+	flag.Func("custom-labels", "[Optional] Custom labels which will be added to all the metrics. E.g. `--custom-labels key1=value1,key2=value2`", func(customLabelsString string) error {
+		pairs := strings.Split(customLabelsString, CUSTOM_LABEL_SEPARATOR)
+
+		for _, pair := range pairs {
+			parts := strings.SplitN(pair, CUSTOM_LABEL_KEY_VALUE_SEPARATOR, 2)
+			if len(parts) == 2 {
+				customLabels[parts[0]] = parts[1]
+			}
+		}
+		return nil;
+	});
+
 	flag.Parse()
 
 	client, err := ecsmetadata.NewClientFromEnvironment()
@@ -46,11 +69,11 @@ func main() {
 
 		// Create a new registry and exclude the default Go metrics
 		registry := prometheus.NewRegistry()
-		registry.MustRegister(ecscollector.NewCollector(client))
+		registry.MustRegister(ecscollector.NewCollector(client, customLabels))
 		http.Handle("/metrics", promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
 	} else {
 		log.Printf("Exporter metrics will be exposed.")
-		prometheus.MustRegister(ecscollector.NewCollector(client))
+		prometheus.MustRegister(ecscollector.NewCollector(client, customLabels))
 		http.Handle("/metrics", promhttp.Handler())
 	}
 

@@ -34,8 +34,84 @@ const (
 	bytesInMiB = 1024 * 1024
 )
 
+
 var (
-	metadataDesc = prometheus.NewDesc(
+	metadataDesc *prometheus.Desc
+	svcCpuLimitDesc *prometheus.Desc
+	svcMemLimitDesc *prometheus.Desc
+	cpuTotalDesc *prometheus.Desc
+	cpuUtilizedDesc *prometheus.Desc
+	memoryUtilizedDesc *prometheus.Desc
+	memUsageDesc *prometheus.Desc
+	memLimitDesc *prometheus.Desc
+	memCacheUsageDesc *prometheus.Desc
+	networkRxBytesDesc *prometheus.Desc
+	networkRxPacketsDesc *prometheus.Desc
+	networkRxDroppedDesc *prometheus.Desc
+	networkRxErrorsDesc *prometheus.Desc
+	networkTxBytesDesc *prometheus.Desc
+	networkTxPacketsDesc *prometheus.Desc
+	networkTxDroppedDesc *prometheus.Desc
+	networkTxErrorsDesc *prometheus.Desc
+
+	labels []string
+	svcLabels []string
+	metadataLabels []string
+	cpuLabels []string
+	networkLabels []string
+
+)
+
+// NewCollector returns a new Collector that queries ECS metadata server
+// for ECS task and container metrics.
+func NewCollector(client *ecsmetadata.Client, customLabels map[string]string) prometheus.Collector {
+	metadataLabels = []string{
+		"cluster",
+		"task_arn",
+		"family",
+		"revision",
+		"desired_status",
+		"known_status",
+		"pull_started_at",
+		"pull_stopped_at",
+		"availability_zone",
+		"launch_type",
+		"task_id",
+	}
+	svcLabels = []string{
+		"task_arn",
+		"task_id",
+	}
+	labels = []string{
+		"container",
+		"task_id",
+	}
+
+
+	var customLabelKeys  []string
+	var customLabelValues []string
+
+	for key, value := range customLabels {
+		customLabelKeys = append(customLabelKeys, key)
+		customLabelValues = append(customLabelValues, value)
+	}
+
+	// Append all the custom labels to the default labels at the end.
+	metadataLabels = append(metadataLabels, customLabelKeys...)
+	labels = append(labels, customLabelKeys...)
+	svcLabels = append(svcLabels, customLabelKeys...)
+	networkLabels = append(
+		labels,
+		"device",
+	)
+	cpuLabels = append(
+		labels,
+		"cpu",
+	)
+
+	// Initialize all the metric descriptors.
+
+	metadataDesc  = prometheus.NewDesc(
 		"ecs_metadata_info",
 		"ECS service metadata.",
 		metadataLabels, nil)
@@ -119,50 +195,14 @@ var (
 		"ecs_network_transmit_errors_total",
 		"Network errors in transmit.",
 		networkLabels, nil)
-)
 
-var labels = []string{
-	"container",
-	"task_id",
-}
 
-var svcLabels = []string{
-	"task_arn",
-	"task_id",
-}
-
-var metadataLabels = []string{
-	"cluster",
-	"task_arn",
-	"family",
-	"revision",
-	"desired_status",
-	"known_status",
-	"pull_started_at",
-	"pull_stopped_at",
-	"availability_zone",
-	"launch_type",
-	"task_id",
-}
-
-var cpuLabels = append(
-	labels,
-	"cpu",
-)
-
-var networkLabels = append(
-	labels,
-	"device",
-)
-
-// NewCollector returns a new Collector that queries ECS metadata server
-// for ECS task and container metrics.
-func NewCollector(client *ecsmetadata.Client) prometheus.Collector {
-	return &collector{client: client}
+	return &collector{client: client, customLabelValues: customLabelValues}
 }
 
 type collector struct {
 	client *ecsmetadata.Client
+	customLabelValues []string
 }
 
 func (c *collector) Describe(ch chan<- *prometheus.Desc) {
@@ -190,10 +230,7 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		return
 	}
 
-	ch <- prometheus.MustNewConstMetric(
-		metadataDesc,
-		prometheus.GaugeValue,
-		1.0,
+	metadataLableVals :=[]string{
 		metadata.Cluster,
 		metadata.TaskARN,
 		metadata.Family,
@@ -205,12 +242,22 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		metadata.AvailabilityZone,
 		metadata.LaunchType,
 		metadata.TaskID,
+	}
+	metadataLableVals = append(metadataLableVals, c.customLabelValues...)
+
+	ch <- prometheus.MustNewConstMetric(
+		metadataDesc,
+		prometheus.GaugeValue,
+		1.0,
+		metadataLableVals...,
 	)
 
 	svcLableVals := []string{
 		metadata.TaskARN,
 		metadata.TaskID,
 	}
+
+	svcLableVals = append(svcLableVals, c.customLabelValues...)
 
 	ch <- prometheus.MustNewConstMetric(
 		svcCpuLimitDesc,
@@ -242,7 +289,9 @@ func (c *collector) Collect(ch chan<- prometheus.Metric) {
 		labelVals := []string{
 			container.Name,
 			metadata.TaskID,
+
 		}
+		labelVals = append(labelVals, c.customLabelValues...)
 
 		// Calculate CPU usage percentage
 		cpu_delta := s.CPUStats.CPUUsage.TotalUsage - s.PreCPUStats.CPUUsage.TotalUsage
