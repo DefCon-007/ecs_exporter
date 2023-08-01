@@ -1,0 +1,24 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Specify a new tag manually (If not provided, a minor semver bump is generated and pushed)'
+        required: false
+        type: string
+      id:
+        description: 'Optionally specify and ID to track this workflow programmatically'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  Release:
+    uses: ./.github/workflows/release.yaml
+    with:
+      id: ${{ inputs.id }}
+      tag: ${{ inputs.tag }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
